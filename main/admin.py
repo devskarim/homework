@@ -1,3 +1,4 @@
 from django.contrib import admin
+from main.models import User, UserConfirmation, Post, Comments, Media
 
-# Register your models here.
+admin.site.register([UserConfirmation, User, Post, Comments, Media])
