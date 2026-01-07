@@ -14,7 +14,7 @@ from api.serializers import EmailSerializer, CodeSerializer
 class SendCodeApiView(APIView):
     serializer_class = EmailSerializer
     
-		
+    @swagger_auto_schema(request_body=EmailSerializer)
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -35,27 +35,35 @@ class SendCodeApiView(APIView):
         })
     
 class CodeVerifyApiView(APIView):
-    permission_classes = [IsAuthenticated]
-    serializer_class = CodeSerializer
+			permission_classes = [IsAuthenticated]
+			serializer_class = CodeSerializer
 
-    @swagger_auto_schema(request_body=CodeSerializer)
-    def post(self, request):
-        user = request.user
-        serializer = self.serializer_class(data=request.data)
-        serializer.is_valid(raise_exception=True)
+			@swagger_auto_schema(request_body=CodeSerializer)
+			def post(self, request):
+					user = request.user
+					serializer = self.serializer_class(data=request.data)
+					serializer.is_valid(raise_exception=True)
 
-        code = serializer.validated_data['code']
+					code = serializer.validated_data['code']
+					
+					if self.verify_user(user,  code):
+							data = {
+								"status": True,
+								"message": 'User verified!'
+								}
+					else: 
+							data = {
+								"status": False,
+								"message": 'Code expired or wrong.'
+								}
+					return Response(data)
+							
+			def verify_user(self, user, code): 
+						confirmation = user.confirmations.order_by('-created_at').first()
+						if not confirmation.is_expired()  and confirmation.code == code:
+							user.status  = VERIFIED
+							user.save()
+							return True
 
-        if self.verify_user(user, code):
-            refresh = RefreshToken.for_user(user)
-
-            return Response({
-                "status": True,
-                "access": str(refresh.access_token),
-                "refresh": str(refresh)
-            })
-
-        return Response({
-            "status": False,
-            "message": "Invalid or expired code"
-        }, status=400)
+class ResendCodeApiView(APIView): 
+	pass
