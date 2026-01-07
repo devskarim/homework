@@ -2,7 +2,8 @@ import uuid
 
 from django.utils import timezone
 from django.db import models 
-from django.contrib.auth.models import AbstractUser 
+from django.contrib.auth.models import AbstractUser
+from rest_framework_simplejwt import tokens
 
 from api.utilits import generate_pin
 
@@ -41,6 +42,11 @@ class User(AbstractUser):
     super().save(*args, **kwargs)
 
 
+  def token(self):
+    refresh = tokens.RefreshToken.for_user(self)
+    return  {'acces': str(refresh.access_token), "refresh": str(refresh)}
+  
+  
 class UserConfirmation(models.Model): 
   code = models.CharField(max_length=6)
   user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='confirmations')

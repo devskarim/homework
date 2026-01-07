@@ -29,6 +29,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 	'drf_yasg',
     'rest_framework_simplejwt',
+	'drf_spectacular',
 	'api',
 ]
 
@@ -81,7 +82,18 @@ SIMPLE_JWT = {
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-    )
+    ), 
+	'DEFAULT_PERMISSION_CLASSES': [
+		'rest_framework.permissions.AllowAny', 
+    ],
+	'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+}
+
+SPECTACULAR_SETTINGS = {
+	'TITLE': 'My first JWT authentication API',
+	'DESCRIPTION': 'There is same descs',
+    'VERSION': '1.0.0',
+	'SERVE_INCLUDE_SCHEMA': False
 }
 
 MIDDLEWARE = [
@@ -153,8 +165,8 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
 
-EMAIL_HOST_USER = 'blogasadbek@gmail.com'
-EMAIL_HOST_PASSWORD = 'hqls ktrq furo xzwk'
+EMAIL_HOST_USER = 'karimovizzatillo772@gmail.com'
+EMAIL_HOST_PASSWORD = 'ntok pdpm vgko tmid'
 
 
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
