@@ -171,7 +171,7 @@ EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
 
 EMAIL_HOST_USER = 'karimovizzatillo772@gmail.com'
-EMAIL_HOST_PASSWORD = 'ntok pdpm vgko tmid'
+EMAIL_HOST_PASSWORD = 'ntok pdpm vgko'
 
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 SERVER_EMAIL = EMAIL_HOST_USER
