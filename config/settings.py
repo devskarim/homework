@@ -1,3 +1,4 @@
+import os
 from datetime import timedelta
 from pathlib import Path
 from django.conf import settings 
@@ -29,7 +30,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 	'drf_yasg',
     'rest_framework_simplejwt',
-	'drf_spectacular',
 	'api',
 ]
 
@@ -41,8 +41,8 @@ SIMPLE_JWT = {
     "UPDATE_LAST_LOGIN": False,
 
     "ALGORITHM": "HS256",
-    "SIGNING_KEY": settings.SECRET_KEY,
-    "VERIFYING_KEY": settings.SECRET_KEY,
+    "SIGNING_KEY": SECRET_KEY,
+    "VERIFYING_KEY": SECRET_KEY,
     "AUDIENCE": None,
     "ISSUER": None,
     "JSON_ENCODER": None,
@@ -80,20 +80,33 @@ SIMPLE_JWT = {
 }
 
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
-    ), 
+     "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+    ),
 	'DEFAULT_PERMISSION_CLASSES': [
 		'rest_framework.permissions.AllowAny', 
     ],
-	'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+	# 'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
 }
+
+
 
 SPECTACULAR_SETTINGS = {
 	'TITLE': 'My first JWT authentication API',
 	'DESCRIPTION': 'There is same descs',
     'VERSION': '1.0.0',
 	'SERVE_INCLUDE_SCHEMA': False
+}
+
+SWAGGER_SETTINGS = {
+    "SECURITY_DEFINITIONS": {
+        "Bearer": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header",
+            "description": "JWT Authorization header using the Bearer scheme. Example: Bearer eyJhbGciOiJIUzI1NiIs..."
+        }
+    }
 }
 
 MIDDLEWARE = [
@@ -165,8 +178,8 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
 
-EMAIL_HOST_USER = 'karimovizzatillo772@gmail.com'
-EMAIL_HOST_PASSWORD = 'ntok pdpm vgko tmid'
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
 
 
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER

@@ -46,7 +46,7 @@ class User(AbstractUser):
     refresh = tokens.RefreshToken.for_user(self)
     return  {'acces': str(refresh.access_token), "refresh": str(refresh)}
   
-  
+
 class UserConfirmation(models.Model): 
   code = models.CharField(max_length=6)
   user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='confirmations')
@@ -63,4 +63,4 @@ class UserConfirmation(models.Model):
     return self.expired_at < timezone.now()
   
   def __str__(self):
-    return f"{self.user.username}| {self.code}"
+    return f"{self.user.username}|  {self.code}"
