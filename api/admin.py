@@ -1,4 +1,4 @@
 from django.contrib import admin
-from api.models import User, UserConfirmation, Post, Comments, Media
+from api.models import User, UserConfirmation
 
-admin.site.register([UserConfirmation, User, Post, Comments, Media])
+admin.site.register([User, UserConfirmation])

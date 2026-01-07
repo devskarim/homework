@@ -1,4 +1,4 @@
-from rest_framework import serializers
+from rest_framework import serializers 
 
-class EmailSerializer(serializers.Serializer):
-    email = serializers.EmailField()
+class EmailSerializer(serializers.Serializer): 
+	email = serializers.EmailField(required=True)

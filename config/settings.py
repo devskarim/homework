@@ -1,6 +1,6 @@
 from datetime import timedelta
 from pathlib import Path
-from django.conf import settings
+from django.conf import settings 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -10,7 +10,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-2vo#p$$y8fdhsh6=f)cx=(m*9py=j*(n1a(c*kb%zpcm8y)rte'
+SECRET_KEY = 'django-insecure-c!y-hyd99hx(!e1zzj$o1$m0bu0lgzgwl6b#&b)^h5(62$y2j('
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -26,13 +26,11 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-	'django.contrib.staticfiles',
-	'rest_framework_simplejwt',
-    'drf_yasg',
-    'api.apps.ApiConfig'
-
+    'django.contrib.staticfiles',
+	'drf_yasg',
+    'rest_framework_simplejwt',
+	'api',
 ]
-
 
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(days=5),
@@ -80,13 +78,11 @@ SIMPLE_JWT = {
     "CHECK_USER_IS_ACTIVE": True,
 }
 
-
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     )
 }
-
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -103,7 +99,7 @@ ROOT_URLCONF = 'config.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'],
+        'DIRS': [],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -148,6 +144,25 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
+# settings.py
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_USE_SSL = False
+
+EMAIL_HOST_USER = 'blogasadbek@gmail.com'
+EMAIL_HOST_PASSWORD = 'hqls ktrq furo xzwk'
+
+
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+SERVER_EMAIL = EMAIL_HOST_USER
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+SERVER_EMAIL = EMAIL_HOST_USER # For admin emails
+
+
 # Internationalization
 # https://docs.djangoproject.com/en/6.0/topics/i18n/
 
@@ -159,25 +174,11 @@ USE_I18N = True
 
 USE_TZ = True
 
-AUTH_USER_MODEL = 'api.USER'
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = 'static/'
-MEDIA_URL = 'media/'
 
-STATIC_ROOT = BASE_DIR / 'static'
-STATIC_ROOT = BASE_DIR / 'media'
 
-# For Email
-
-# settings.py
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587 
-EMAIL_USE_TLS = True 
-EMAIL_HOST_USER = 'devizzatillo@gmail.com'
-EMAIL_HOST_PASSWORD = 'yixe kjfc yrhg ucjx' 
-DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+AUTH_USER_MODEL = "api.User"
