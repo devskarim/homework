@@ -26,7 +26,7 @@ class SendCodeApiView(APIView):
         code = user.create_code()
         refresh = RefreshToken.for_user(user)
 
-        send_code(user=user, email=email, code=code)
+        send_code(user.email, code=code)
 
         return Response({
             "status": True,
@@ -38,13 +38,14 @@ class CodeVerifyApiView(APIView):
 			permission_classes = [IsAuthenticated]
 			serializer_class = CodeSerializer
 
+
 			@swagger_auto_schema(request_body=CodeSerializer)
 			def post(self, request):
 					user = request.user
 					serializer = self.serializer_class(data=request.data)
 					serializer.is_valid(raise_exception=True)
 
-					code = serializer.validated_data['code']
+					code = serializer.validated_data.get('code')
 					
 					if self.verify_user(user,  code):
 							data = {
@@ -66,4 +67,29 @@ class CodeVerifyApiView(APIView):
 							return True
 
 class ResendCodeApiView(APIView): 
-	pass
+	permission_classes = [IsAuthenticated, ]
+
+	def post(self, request): 
+		user = request.user
+		
+		if self.resend_code(user): 
+			data = {
+				"status": True, 
+				"messeage": "Vertification code resent"
+
+			}
+		else:
+			data = {
+				"status": False, 
+				"messeage": "You have got unexpired code. or Smth wrong."
+
+			}
+
+		return Response(data)
+	
+	def resend_code(self, user):
+		confirmation = user.confirmations.order_by('-created_at').first()
+		if confirmation.is_expired() and user.status == NEW:
+			code = user.create_code()
+			send_code(user.email, code=code)
+			return True

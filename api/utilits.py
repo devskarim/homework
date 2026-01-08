@@ -5,7 +5,7 @@ from config.settings import DEFAULT_FROM_EMAIL
 from django.conf import settings
 
 
-def send_code(user,email:str, code:str):
+def send_code(email:str, code:str):
 
 	subject="Vertification codes",
 	html = f"""
