@@ -1,8 +1,11 @@
 import random,string
 
-from django.core.mail import EmailMultiAlternatives,send_mail 
+from django.core.mail import EmailMultiAlternatives,send_mail
 from config.settings import DEFAULT_FROM_EMAIL
+from rest_framework.response import Response
+from rest_framework import status
 from django.conf import settings
+import re
 
 
 def send_code(email:str, code:str):
@@ -94,3 +97,30 @@ def send_code(email:str, code:str):
 
 def generate_pin(size=6, chars=string.digits):
 	return ''.join(random.choice(chars) for _ in range(size))
+
+
+class CustomResponse:
+	
+    @staticmethod
+    def succes(message, data=None):
+        response = { 
+            "status": True,
+            "message": message,
+            "data": data
+        }
+
+        return Response(data=response, status=status.HTTP_200_OK)
+    
+    @staticmethod
+    def error(message, data=None):
+        response = { 
+            "status": False,
+            "message": message,
+            "data": data
+        }
+
+        return Response(data=response, status=status.HTTP_406_NOT_ACCEPTABLE)
+    
+
+def is_email(email): 
+    return re.fullmatch(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$', email)
