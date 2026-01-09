@@ -3,6 +3,12 @@ from django.contrib.auth import get_user_model
 
 from api.models import User, DONE
 from api.utilits import is_email
+
+class UserSerializer(serializers.ModelSerializer):
+	class Meta: 
+		model = User
+		fields = ['username', 'email', "first_name", "last_name", 'phone']
+
 class EmailSerializer(serializers.Serializer):
 	email = serializers.EmailField(required=True)
 
@@ -89,20 +95,19 @@ class SignUpSerializer(serializers.Serializer):
 	
 
 class LoginSerializer(serializers.Serializer):
-	user_input = serializers.CharField(max_length = 200, required  = True)
-	password = serializers.CharField(max_length = 100, required  = True)
-	username = serializers.CharField(max_length =  100)
+    user_input = serializers.CharField(max_length=200, required=True)
+    password = serializers.CharField(max_length=100, required=True)
+    username = serializers.CharField(read_only=True)
 
-	def  validdate(self, validated_data): 
-		user_input  = validated_data.get('user_input')
+    def validate(self, attrs):
+        user_input = attrs.get("user_input")
 
-		if is_email(user_input): 
-				user  =  User.objects.filter(email = user_input).filter(status = DONE).first()
-				if user is not None:
-					validated_data['username'] = user.username
-				else: 
-					raise serializers.ValidationError("User not Fount")
-		else: 
-			validated_data['username'] = user_input
+        if is_email(user_input):
+            user = User.objects.filter(email=user_input, status=DONE).first()
+            if not user:
+                raise serializers.ValidationError("User not found")
+            attrs["username"] = user.username
+        else:
+            attrs["username"] = user_input
 
-		return validated_data
+        return attrs

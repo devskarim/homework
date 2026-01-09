@@ -4,14 +4,17 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework_simplejwt.tokens import RefreshToken
-from drf_yasg.utils import swagger_auto_schema
 from django.contrib.auth import authenticate
+from drf_yasg.utils import swagger_auto_schema
+from drf_spectacular.utils import extend_schema
+
 
 from api.models import User, VERIFIED, DONE, NEW
 from api.serializers import EmailSerializer, CodeSerializer, SignUpSerializer, LoginSerializer
 from api.utilits import send_code, CustomResponse
 
 
+@extend_schema(tags=['Auth'])
 class SendCodeApiView(APIView):
     serializer_class = EmailSerializer
 
@@ -34,7 +37,7 @@ class SendCodeApiView(APIView):
             data=str(refresh.access_token)
         )
 
-
+@extend_schema(tags=['Auth'])
 class CodeVerifyApiView(APIView):
     permission_classes = [IsAuthenticated]
     serializer_class = CodeSerializer
@@ -62,7 +65,7 @@ class CodeVerifyApiView(APIView):
 
         return False
 
-
+@extend_schema(tags=['Auth'])
 class ResendCodeApiView(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -86,7 +89,7 @@ class ResendCodeApiView(APIView):
 
         return False
 
-
+@extend_schema(tags=['Auth'])
 class SignUpApiView(APIView):
     serializer_class = SignUpSerializer
     permission_classes = [IsAuthenticated]
@@ -120,30 +123,24 @@ class SignUpApiView(APIView):
             data=data
         )
 
-class LoginApiView(APIView):
+        
+@extend_schema(tags=['Auth'])
+class LoginAPIView(APIView):
     serializer_class = LoginSerializer
-    permission_classes = [AllowAny, ]
-
+    
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
-
-        username = serializer.validated_data.get('username')
-        password = serializer.validated_data.get('password')
-
+        
+        username = serializer.validated_data.get("username")
+        password = serializer.validated_data.get("password") 
+        
         user = authenticate(request, username=username, password=password)
-
-        if not user:
-            return CustomResponse.error(
-                message="Invalid username or password"
-                  )
-
         if user is not None:
             return CustomResponse.succes(
-                message="User logged succesfully",
+                message="User logged in succesfully",
                 data=user.token()
             )
-
         return CustomResponse.error(
-            message="user not found"
+            message="User not found"
         )
