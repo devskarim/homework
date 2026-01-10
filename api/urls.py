@@ -1,10 +1,12 @@
 from django.urls import path 
 from rest_framework.routers import DefaultRouter
 
-from api.views import SendCodeApiView, CodeVerifyApiView, ResendCodeApiView, SignUpApiView, LoginAPIView, PostViewApiView
+from api.views import SendCodeApiView, CodeVerifyApiView, ResendCodeApiView, SignUpApiView, LoginAPIView, PostViewSet, CommentViewSet, MediaViewSet
 
 router = DefaultRouter()
-router.register(r"posts", PostViewApiView)
+router.register(r"posts", PostViewSet, basename='posts')
+router.register(r'media', MediaViewSet, basename='media')
+router.register(r'comments', CommentViewSet, basename='comments')
 
 urlpatterns = [
 	path('send-code/', SendCodeApiView.as_view()), 

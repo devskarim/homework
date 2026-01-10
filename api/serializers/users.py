@@ -81,7 +81,7 @@ class SignUpSerializer(serializers.Serializer):
 		if not value:
 			raise serializers.ValidationError("phone cannot be empty")
 		if User.objects.filter(phone=value).exists():
-			raise serializers.ValidationError("Username already taken")
+			raise serializers.ValidationError("Phone number is already taken")
 		return value
 	
 	def validate(self, validated_data):

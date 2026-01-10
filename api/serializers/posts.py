@@ -13,3 +13,9 @@ class MediaSerializer(serializers.ModelSerializer):
 	class Meta: 
 		model = Media 
 		fields = "__all__"
+
+
+class CommentSerializer(serializers.Serializer):
+    class Meta:
+        model = Comment
+        fields = '__all__'
