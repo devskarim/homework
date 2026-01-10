@@ -21,6 +21,10 @@ db.sqlite3
 media/
 staticfiles/
 
+# media 
+media
+static
+
 # Migrations cache
 */migrations/__pycache__/
 
@@ -55,6 +59,9 @@ venv.bak/
 .DS_Store
 Thumbs.db
 desktop.ini
+**/__pycache__/
+**/__pycache__/\n*.rus
+__pycache__\n*.rus
 
 # ================================
 # Django Secrets
