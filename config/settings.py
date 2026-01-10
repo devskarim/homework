@@ -1,4 +1,5 @@
 import os
+from decouple import config
 from datetime import timedelta
 from pathlib import Path
 from django.conf import settings 
@@ -11,12 +12,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-c!y-hyd99hx(!e1zzj$o1$m0bu0lgzgwl6b#&b)^h5(62$y2j('
+SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = config("DEBUG", cast = bool)
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -112,6 +113,7 @@ REST_FRAMEWORK = {
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+	"whitenoise.middleware.WhiteNoiseMiddleware",   
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -119,6 +121,12 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+STORAGES = {
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
 
 ROOT_URLCONF = 'config.urls'
 
@@ -179,8 +187,8 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
 
-EMAIL_HOST_USER = 'fordevelopsecure@gmail.com'
-EMAIL_HOST_PASSWORD = 'dxyg fcet dsgj zyfq'
+EMAIL_HOST_USER =  config("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
 
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 SERVER_EMAIL = EMAIL_HOST_USER
@@ -205,9 +213,6 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 STATIC_ROOT  = BASE_DIR / 'staticfiles'
-STATICFILESDIRS  = [
-	BASE_DIR / 'static'
-]
 
 MEDIA_URL = 'media/'
 MEDIA_ROOT = BASE_DIR / 'media'
